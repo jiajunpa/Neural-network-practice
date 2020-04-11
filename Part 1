@@ -1,0 +1,138 @@
+# CSE474/574 - Programming Assignment 2
+## Part 1 - Sentiment Analysis
+
+In the code provided below, you need to add code wherever specified by `TODO:`. 
+
+> You will be using a Python collection class - `Counter` to maintain the word counts. 
+
+> See https://docs.python.org/2/library/collections.html for more details.
+from collections import Counter
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+%matplotlib inline
+
+# read data files 
+g = open('reviews.txt','r') # What we know!
+reviews_all = list(map(lambda x:x[:-1],g.readlines()))
+g.close()
+g = open('labels.txt','r') # What we WANT to know!
+sentiments_all = list(map(lambda x:x[:-1].upper(),g.readlines()))
+g.close()
+
+# load vocabulary
+g = open('vocab.txt','r')
+vocab = [s.strip() for s in g.readlines()]
+
+# Check out sample reviews
+print('A {} review:'.format(sentiments_all[0]))
+print(reviews_all[0])
+print('\nA {} review:'.format(sentiments_all[1]))
+print(reviews_all[1])
+
+# split into training and test data
+reviews_train,reviews_test = reviews_all[0:24000],reviews_all[24000:]
+sentiments_train,sentiments_test = sentiments_all[0:24000],sentiments_all[24000:]
+
+
+# maintain Counter objects to store positive, negative and total counts for
+# all the words present in the positive, negative and total reviews.
+positive_word_count = Counter()
+negative_word_count = Counter()
+total_word_count = Counter()
+
+positive_word_list = list()
+negative_word_list = list()
+
+ni = len(reviews_train)        # This parameter can control how many stories that be done
+nj = len(vocab)
+
+for voc in list(vocab):
+    for i in range(ni):
+        for word in list(reviews_train[i].split()):
+            if voc == word and sentiments_train[i] == "POSITIVE":
+                positive_word_list.append(voc)
+            elif voc == word and sentiments_train[i] == "NEGATIVE":
+                negative_word_list.append(voc)
+                
+
+for word in list(positive_word_list):
+    positive_word_count[word] += 1
+    
+for word in list(negative_word_list):
+    negative_word_count[word] += 1
+
+total_word_count = positive_word_count + negative_word_count
+    
+print(positive_word_count)                
+    
+print(negative_word_count)
+     
+    
+
+# TODO: Loop over all the words in the vocabulary
+# and increment the counts in the appropriate counter objects
+# based on the training data
+
+
+# maintain a Counter object to store positive to negative ratios 
+pos_neg_ratios = Counter()
+total_common_list = list()
+total_common_counter = Counter()
+positive_word_list = list()
+negative_word_list = list()
+negative_word_number_list = list()
+positive_word_number_list = list()
+p_n_ratio = list()
+
+
+# Calculate the ratios of positive and negative uses of the most common words
+# Consider words to be "common" if they've been used at least 100 times
+for term,cnt in list(total_word_count.most_common()):
+    if(cnt > 0):
+        total_common_list.append((term,cnt))
+        
+pos_neg_ratios = total_word_count
+for word,ratio in pos_neg_ratios.most_common():
+    pos_neg_ratios[word] = ositive_word_count[word]/negative_word_count[word]
+    
+    
+print(p_n_ratio)
+
+
+#total_word_count = positive_word_count + negative_word_count
+    
+#print(positive_word_count)                
+    
+#print(negative_word_count)
+
+
+print("Pos-to-neg ratio for 'the' = {}".format(pos_neg_ratios["the"]))
+print("Pos-to-neg ratio for 'amazing' = {}".format(pos_neg_ratios["amazing"]))
+print("Pos-to-neg ratio for 'terrible' = {}".format(pos_neg_ratios["terrible"]))
+
+# Print few words with neutral score
+for ind in np.where(scores == 0)[0][0:10]:
+    print(vocab_selected[ind])
+    
+    def nonml_classifier(review,pos_neg_ratios):
+    '''
+    Function that determines the sentiment for a given review.
+    
+    Inputs:
+      review - A text containing a movie review
+      pos_neg_ratios - A Counter object containing frequent words
+                       and corresponding log positive-negative ratio
+    Return:
+      sentiment - 'NEGATIVE' or 'POSITIVE'
+    '''
+    # TODO: Implement the algorithm here. Change the next line.
+    for term in review.split():
+        n = len(review.split())
+        sum_lgratio = sum_lgratio + pos_neg_ratios[term]
+    average_lgratio = sum_lgration/n
+    
+    if average_lgratio > 0.5:
+        return 'NEGATIVE'
+    else:
+        return 'POSITIVE'
